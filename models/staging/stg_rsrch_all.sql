@@ -20,10 +20,11 @@ renamed_casted as (
         {{ dbt.safe_cast("Change_Type", api.Column.translate_type("string")) }} as change_type,
         {{ dbt.safe_cast("Covered_Recipient_Type", api.Column.translate_type("string")) }} as covered_recipient_type,
         -- Combine hospital/entity names
-        coalesce(
-            nullif(trim({{ dbt.safe_cast("Noncovered_Recipient_Entity_Name", api.Column.translate_type("string")) }}), ''),
-            nullif(trim({{ dbt.safe_cast("Teaching_Hospital_Name", api.Column.translate_type("string")) }}), '')
-        ) as hospital_or_entity_name,
+        case
+            when nullif(trim({{ dbt.safe_cast("Noncovered_Recipient_Entity_Name", api.Column.translate_type("string")) }}), '') is not null
+            then trim({{ dbt.safe_cast("Noncovered_Recipient_Entity_Name", api.Column.translate_type("string")) }})
+            else trim({{ dbt.safe_cast("Teaching_Hospital_Name", api.Column.translate_type("string")) }})
+        end as hospital_or_entity_name,
         {{ dbt.safe_cast("Recipient_City", api.Column.translate_type("string")) }} as recipient_city,
         {{ dbt.safe_cast("Recipient_State", api.Column.translate_type("string")) }} as recipient_state,
         {{ dbt.safe_cast("Recipient_Zip_Code", api.Column.translate_type("string")) }} as recipient_zip_code,
@@ -55,9 +56,9 @@ renamed_casted as (
         -- Payment Information
         {{ dbt.safe_cast("Total_Amount_of_Payment_USDollars", api.Column.translate_type("float")) }} as total_amount_payment_usdollars,
         -- Cast date fields to date type
-        {{ dbt.safe_cast("Date_of_Payment", api.Column.translate_type("date")) }} as date_of_payment,
+        safe.parse_date('%m/%d/%Y', {{ dbt.safe_cast("Date_of_Payment", api.Column.translate_type("string")) }}) as date_of_payment,
         {{ dbt.safe_cast("Form_of_Payment_or_Transfer_of_Value", api.Column.translate_type("string")) }} as form_of_payment,
-        {{ dbt.safe_cast("Payment_Publication_Date", api.Column.translate_type("date")) }} as payment_publication_date
+        safe.parse_date('%m/%d/%Y', {{ dbt.safe_cast("Payment_Publication_Date", api.Column.translate_type("string")) }}) as payment_publication_date
 
     from source_data
 )
