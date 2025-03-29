@@ -11,6 +11,7 @@ with source_data as (
 ),
 
 renamed_casted as (
+    select
 
         {{ dbt.safe_cast("Record_ID", api.Column.translate_type("string")) }} as record_id,
         {{ dbt.safe_cast("Program_Year", api.Column.translate_type("integer")) }} as program_year,
