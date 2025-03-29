@@ -1,0 +1,144 @@
+version: 2
+
+sources:
+  - name: staging
+    database: "{{ env_var('DBT_DATABASE', 'dtc-de-course-447715') }}"
+    schema: "{{ env_var('DBT_SCHEMA', 'CMS') }}"
+    tables:
+      - name: RSRCH_ALL
+        description: "Source table containing research payment data from CMS Open Payments."
+
+models:
+  - name: stg_rsrch_all
+    description: "Staging model for research payment data. Cleans, renames, and lightly transforms the RSRCH_ALL source data. One record per payment."
+    columns:
+      - name: record_id
+        data_type: string 
+        description: "Unique identifier for the payment record."
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+
+      - name: program_year
+        data_type: integer
+        description: "The calendar year to which the payment record applies."
+        tests:
+          - not_null:
+              severity: warn
+
+      # Recipient Information
+      - name: change_type
+        data_type: string
+        description: "Type of change for the record."
+
+
+      - name: covered_recipient_type
+        data_type: string
+        description: "Type of the primary covered recipient."
+
+      - name: hospital_or_entity_name
+        data_type: string
+        description: "Combined name of the teaching hospital or non-covered recipient entity receiving the payment."
+        tests:
+          - not_null:
+              severity: warn
+
+      - name: recipient_city
+        data_type: string
+        description: "City of the primary recipient."
+
+      - name: recipient_state
+        data_type: string
+        description: "State abbreviation of the primary recipient."
+
+      - name: recipient_zip_code
+        data_type: string
+        description: "Zip code of the primary recipient."
+
+      - name: recipient_country
+        data_type: string
+        description: "Country of the primary recipient."
+
+      - name: pi_1_covered_recipient_type
+        data_type: string
+        description: "Type of the first principal investigator (e.g., Covered Recipient Physician)."
+
+      - name: pi_1_full_name
+        data_type: string
+        description: "Full name (First Last) of the first principal investigator."
+
+      - name: pi_1_city
+        data_type: string
+        description: "City of the first principal investigator."
+
+      - name: pi_1_state
+        data_type: string
+        description: "State abbreviation of the first principal investigator."
+
+      - name: pi_1_zip_code
+        data_type: string
+        description: "Zip code of the first principal investigator."
+
+      - name: pi_1_primary_type_1
+        data_type: string
+        description: "Primary professional type of the first principal investigator."
+
+      - name: pi_1_specialty_1
+        data_type: string
+        description: "Primary specialty of the first principal investigator."
+
+      - name: submitting_manufacturer_or_gpo_name
+        data_type: string
+        description: "Name of the manufacturer or GPO submitting the payment record."
+
+      - name: payment_manufacturer_or_gpo_name
+        data_type: string
+        description: "Name of the manufacturer or GPO making the payment."
+
+      - name: payment_manufacturer_or_gpo_state
+        data_type: string
+        description: "State abbreviation of the manufacturer or GPO making the payment."
+
+      - name: related_product_indicator
+        data_type: string
+        description: "Indicates if the payment is associated with a covered/non-covered product (Yes/No)."
+
+      - name: covered_or_noncovered_indicator_1
+        data_type: string
+        description: "Indicates if the associated product 1 is covered or non-covered."
+
+      - name: indicate_product_type_1
+        data_type: string
+        description: "Type of the associated product 1 (e.g., Drug, Biological, Device, Medical Supply)."
+
+      - name: product_category_or_therapeutic_area_1
+        data_type: string
+        description: "Category or therapeutic area of the associated product 1."
+
+      - name: product_name_1
+        data_type: string
+        description: "Name of the associated drug, biological, device, or medical supply 1."
+
+      - name: total_amount_payment_usdollars
+        data_type: float
+        description: "Total amount of the payment in US Dollars."
+        tests:
+          - not_null:
+              severity: warn
+
+      - name: date_of_payment
+        data_type: date
+        description: "Date the payment was made."
+        tests:
+          - not_null:
+              severity: warn
+
+      - name: form_of_payment
+        data_type: string
+        description: "The form of the payment or transfer of value (e.g., Cash or cash equivalent, In-kind items and services)."
+
+      - name: payment_publication_date
+        data_type: date
+        description: "Date the payment record was published."
