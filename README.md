@@ -94,8 +94,8 @@ This project includes Terraform configuration in the `Terraform/` directory to p
 ## 6. Dashboard (Looker Studio)
 
 *   **Tool:** Google Looker Studio (formerly Data Studio).
-*   **Content:** A dashboard (`Dashboard/CMS_RSRCH_Dashboard.pdf` provides a static view) visualizes the transformed data. It includes at least two tiles:
-    *   One showing distribution across a category (e.g., spend by manufacturer).
-    *   One showing trends over time (e.g., payment records per year).
+*   **Content:** A dashboard (`Dashboard/dashboard.png` provides a static view) visualizes the transformed data. It includes at least two tiles:
+    *   One showing distribution across a category (e.g., spend by state).
+    *   One showing trends over time (e.g., payment records per year and month).
 
 ![Dashboard Screenshot](Dashboard/dashboard.png)
