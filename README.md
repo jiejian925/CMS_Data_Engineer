@@ -17,7 +17,7 @@ This project implements an end-to-end data engineering pipeline to analyze resea
 
 The project provides a clear, aggregated view of research funding flows, enabling easier exploration of total spending and transaction volumes by manufacturers and recipient hospitals/research entities over time.
 
-## Pipeline Details
+## 2. Pipeline Details
 
 ### 1. Data Ingestion (Batch)
 - **Extraction & Upload:** An Airflow DAG extracts the CMS research payments dataset and uploads it to a designated GCS bucket.
