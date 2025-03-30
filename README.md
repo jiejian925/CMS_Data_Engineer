@@ -17,6 +17,7 @@ This project implements an end-to-end data engineering pipeline to analyze resea
 
 The project provides a clear, aggregated view of research funding flows, enabling easier exploration of total spending and transaction volumes by manufacturers and recipient hospitals/research entities over time.
 
+<<<<<<< HEAD
 ## 2. Cloud Environment
 
 *   **Platform:** Google Cloud Platform (GCP) is used for storage (GCS) and data warehousing (BigQuery).
@@ -104,3 +105,28 @@ This project includes Terraform configuration in the `Terraform/` directory to p
     *   **Airflow (Ingestion):** See `airflow/README.md`. Requires Docker, Docker Compose, and GCP credentials. Uses Docker to ensure a consistent environment.
     *   **dbt (Transformation):** See `dbt/README.md`. Requires connecting the repository to dbt Cloud and configuring the BigQuery connection there.
 *   **Configuration:** Key configuration details (like GCP project ID, bucket names) are mentioned in the respective READMEs and DAG files.
+=======
+## 2. Pipeline Details
+
+### 1. Data Ingestion (Batch)
+- **Extraction & Upload:** An Airflow DAG extracts the CMS research payments dataset and uploads it to a designated GCS bucket.
+- **Batch Mode:** The pipeline runs in batch mode, orchestrated by Airflow on a GCP Cloud VM, ensuring scalability and reliability.
+
+### 2. Data Warehouse (BigQuery)
+- **Loading:** Data is transferred from the GCS data lake to BigQuery.
+- **Optimization:**
+  - **Partitioning:** Tables are partitioned by date to improve query efficiency.
+  - **Clustering:** Key columns (manufacturer and hospital) are used for clustering to accelerate analytical queries.
+
+### 3. Data Transformation (dbt Cloud)
+- **Transformations:** dbt Cloud models transform the raw data into:
+  - A fact table (`fact_rsrch`) capturing research payments.
+  - Analytical tables that further prepare the data for visualization.
+- **Modularity:** Each transformation is version-controlled and testable.
+
+### 4. Dashboard Visualization (Looker Studio)
+- **Dashboard Composition:** The dashboard includes:
+  - **Categorical Tile:** Graph showing the distribution of research payment spend across manufacturers or hospitals.
+  - **Temporal Tile:** Graph showing the trend of research payment records over time.
+- **User-Focused:** The dashboard is designed with clear titles, references, and legends for ease of interpretation.
+>>>>>>> 6465183d7ce7c893cf5c5076539a1eb364af646d
