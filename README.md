@@ -21,8 +21,8 @@ The project provides a clear, aggregated view of research funding flows, enablin
 
 *   **Platform:** Google Cloud Platform (GCP) is used for storage (GCS) and data warehousing (BigQuery).
 *   **Development & Orchestration:**
-    *   Data ingestion is orchestrated using Apache Airflow, running locally via Docker containers (see `airflow/README.md`).
-    *   Data transformations are managed and executed using dbt Cloud (see `dbt/README.md`).
+    *   Data ingestion is orchestrated using Apache Airflow, running locally via Docker containers (airflow/README.md).
+    *   Data transformations are managed and executed using dbt Cloud (dbt/README.md).
 *   **Infrastructure:** The core GCP resources (GCS bucket, BigQuery dataset) can be provisioned using the Terraform configuration provided in the `Terraform/` directory.
 
 ### Infrastructure Setup (Terraform)
@@ -76,7 +76,7 @@ This project includes Terraform configuration in the `Terraform/` directory to p
     4.  Uploads the Parquet file to a Google Cloud Storage (GCS) bucket (acting as the data lake).
     5.  Loads the data from GCS into a final BigQuery table using external tables and merge logic.
     6.  Cleans up temporary local files.
-*   **Details:** See `airflow/README.md` for setup and execution.
+*   **Details:** See (airflow/README.md) for setup and execution.
 
 ## 4. Data Warehouse (BigQuery)
 
@@ -89,7 +89,7 @@ This project includes Terraform configuration in the `Terraform/` directory to p
 *   **Process:** dbt models transform the raw data loaded into BigQuery:
     *   **Staging (`models/staging/`):** Cleans, renames, and casts data types from the source table (`RSRCH_ALL`). Includes schema definitions and tests (`schema.yml`).
     *   **Core (`models/core/`):** Builds analytical tables (e.g., `fact_rsrch_all_partitioned_clustered.sql`) from the staging layer.
-*   **Details:** See `dbt/README.md` for dbt Cloud setup.
+*   **Details:** See (dbt/README.md) for dbt Cloud setup.
 
 ## 6. Dashboard (Looker Studio)
 
