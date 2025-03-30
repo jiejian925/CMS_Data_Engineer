@@ -98,4 +98,4 @@ This project includes Terraform configuration in the `Terraform/` directory to p
     *   One showing distribution across a category (e.g., spend by manufacturer).
     *   One showing trends over time (e.g., payment records per year).
 
-![Dashboard](images/Dashboard/dashboard.png)
+![Dashboard](https://raw.githubusercontent.com/jiejian925/CMS_Data_Engineer/main/Dashboard/dashboard.png)
