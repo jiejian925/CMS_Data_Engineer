@@ -40,6 +40,3 @@ This project contains the dbt models for the CMS Data Engineer research project,
 
 Please refer to the main project contribution guidelines. Use dbt Cloud's features for branching and pull requests if integrated with your Git provider.
 
-## License
-
-[Specify License Information Here]
