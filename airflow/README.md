@@ -6,7 +6,7 @@ This project uses Apache Airflow running in Docker to download, process, and ing
 
 The project contains two main Airflow DAGs:
 
-1.  **`GCP_ingestion_CMS_RSRCH`**: Ingests the **Research (RSRCH)** payment data from CMS for the years 2018 through 2023.
+1.  **`GCP_ingestion_CMS_RSRCH`**: Ingests the **Research (RSRCH)** payment data from CMS for the years 2017 through 2023.
 2.  **`GCP_ingestion_CMS`**: Ingests **Research (RSRCH)**, **Ownership (OWNRSHP)**, and **General (GNRL)** payment data from CMS for the years 2017 through 2019.
 
 Both DAGs perform the following high-level steps for each specified year:
