@@ -1,0 +1,124 @@
+version: '3.10'
+services:
+    postgres:
+        image: postgres:13
+        environment:
+        - POSTGRES_USER=airflow
+        - POSTGRES_PASSWORD=airflow
+        - POSTGRES_DB=airflow
+        volumes:
+            - postgres-db-volume:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "airflow"]
+            interval: 5s
+            retries: 5
+
+    init-airflow:
+        build: .
+        user: root
+        depends_on:
+        - postgres
+        environment:
+        - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow    
+        command: >
+          bash -c "
+          until pg_isready -h postgres -U airflow; do
+            echo 'Waiting for PostgreSQL to be ready...';
+            sleep 2;
+          done;
+          airflow db migrate && airflow connections create-default-connections &&
+          airflow users create -r Admin -u admin -p admin -e admin@example.com -f admin -l airflow &&
+          airflow users create -r Admin -u airflow -p airflow -e airflow@example.com -f airflow -l airflow &&
+          echo 'Initialization complete' &&
+          touch /opt/airflow/shared/initialized
+          "
+
+        healthcheck:
+            test: ["CMD-SHELL", "airflow db check && echo 'Database ready!'"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+            start_period: 10s
+
+        volumes:
+        - shared-data:/opt/airflow/shared            
+
+    scheduler:
+        build: .
+        command: >
+            bash -c "
+            until [ -f /opt/airflow/shared/initialized ]; do
+                echo 'Waiting for init-airflow to complete...';
+                sleep 2;
+            done;
+            airflow scheduler
+            "
+        depends_on:
+            - postgres
+            - init-airflow
+        environment:
+        - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+        - AIRFLOW_UID=50000
+        - COMPOSE_PROJECT_NAME=airflow2025
+        - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+        - AIRFLOW__SCHEDULER__SCHEDULER_HEARTBEAT_SEC=10
+        - AIRFLOW_CONN_METADATA_DB=postgres+psycopg2://airflow:airflow@postgres:5432/airflow
+        - AIRFLOW_VAR__METADATA_DB_SCHEMA=airflow
+        - _AIRFLOW_WWW_USER_CREATE=True
+        - _AIRFLOW_WWW_USER_USERNAME=airflow
+        - _AIRFLOW_WWW_USER_PASSWORD=airflow
+        - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
+        - AIRFLOW__CORE__LOAD_EXAMPLES=False       
+        volumes:
+            - ./dags:/opt/airflow/dags
+            - ./logs:/opt/airflow/logs
+            - ./google:/opt/airflow/google:ro
+            - shared-data:/opt/airflow/shared
+
+    webserver:
+        build: .
+        command: >
+            bash -c "
+            until [ -f /opt/airflow/shared/initialized ]; do
+                echo 'Waiting for init-airflow to complete...';
+                sleep 2;
+            done;
+            airflow webserver
+            "
+        depends_on:
+            - postgres
+            - init-airflow
+            - scheduler
+        environment:
+        - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+        - AIRFLOW_UID=50000
+        - COMPOSE_PROJECT_NAME=airflow2025
+        - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+        - AIRFLOW__SCHEDULER__SCHEDULER_HEARTBEAT_SEC=10
+        - AIRFLOW_CONN_METADATA_DB=postgres+psycopg2://airflow:airflow@postgres:5432/airflow
+        - AIRFLOW_VAR__METADATA_DB_SCHEMA=airflow
+        - _AIRFLOW_WWW_USER_CREATE=True
+        - _AIRFLOW_WWW_USER_USERNAME=airflow
+        - _AIRFLOW_WWW_USER_PASSWORD=airflow
+        - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
+        - AIRFLOW__CORE__LOAD_EXAMPLES=False   
+        - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+        - AIRFLOW__WEBSERVER__SHOW_TRIGGER_FORM_IF_NO_PARAMS=True
+        volumes:
+            - ./dags:/opt/airflow/dags
+            - ./logs:/opt/airflow/logs
+            - ./google:/opt/airflow/google:ro
+            - shared-data:/opt/airflow/shared            
+
+        user: "50000:0"
+        ports:
+            - "8080:8080"
+        healthcheck:
+            test: [ "CMD-SHELL", "[ -f /home/airflow/airflow-webserver.pid ]" ]
+            interval: 30s
+            timeout: 30s
+            retries: 3
+
+volumes:
+  postgres-db-volume:
+  shared-data:
