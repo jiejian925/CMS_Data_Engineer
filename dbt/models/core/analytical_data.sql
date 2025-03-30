@@ -1,7 +1,7 @@
 {{ config(materialized='table') }}
 
 with rsrch_data as (
-    select * from {{ ref('fact_rsrch_all') }}
+    select * from {{ ref('fact_rsrch_all_partitioned_clustered') }}
 )
     select 
         hospital_or_entity_name,
