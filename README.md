@@ -98,10 +98,4 @@ This project includes Terraform configuration in the `Terraform/` directory to p
     *   One showing distribution across a category (e.g., spend by manufacturer).
     *   One showing trends over time (e.g., payment records per year).
 
-## 7. Reproducibility
-
-*   **Instructions:** Clear, step-by-step instructions are provided for setting up and running the different components:
-    *   **Airflow (Ingestion):** See `airflow/README.md`. Requires Docker, Docker Compose, and GCP credentials. Uses Docker to ensure a consistent environment.
-    *   **dbt (Transformation):** See `dbt/README.md`. Requires connecting the repository to dbt Cloud and configuring the BigQuery connection there.
-*   **Configuration:** Key configuration details (like GCP project ID, bucket names) are mentioned in the respective READMEs and DAG files.
   
