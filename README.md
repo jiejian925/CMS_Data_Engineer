@@ -4,6 +4,10 @@
 
 This project implements an end-to-end data engineering pipeline to analyze research-related payments recorded in the CMS (Centers for Medicare & Medicaid Services) Open Payments dataset. The goal is to provide insights into the financial relationships between healthcare manufacturers/GPOs and teaching hospitals/research entities from 2017 to 2023.
 
+## Project Architecture
+
+![Architecture Screenshot](/CMS Project Architecture.png)
+
 ## 1. Problem Description
 
 **Problem:** The CMS Open Payments program collects and makes publicly available extensive data on financial transactions between drug and medical device companies (manufacturers/GPOs) and healthcare providers (physicians, teaching hospitals). While this data promotes transparency, its raw format is large, complex, and challenging to analyze directly, especially for specific areas like research payments over multiple years. Understanding the scale, trends, and distribution of these research payments requires significant data processing and structuring.
