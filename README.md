@@ -6,7 +6,7 @@ This project implements an end-to-end data engineering pipeline to analyze resea
 
 ## Project Architecture
 
-![Architecture Screenshot](/CMS Project Architecture.png)
+![Architecture Screenshot](/Architecture.png)
 
 ## 1. Problem Description
 
